@@ -52,7 +52,8 @@ import LocationAnalysis from "./pages/LocationAnalysis"; // IMPORTED
 import NotFound from "./pages/NotFound";
 import AddCamera from "./pages/AddCamera";
 import FootageViewer from './components/FootageViewer';
-
+import UserIncidentMap from './pages/UserIncidentMap';
+import UserReportMap from './components/UserReportMap';
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -69,7 +70,7 @@ const App = () => (
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/report" element={<ReportIssue />} />
             <Route path="/add-camera" element={<AddCamera />} />
-            
+            <Route path="/user-report-map" element={<UserIncidentMap/>} />
             <Route path="/footage" element={<FootageViewer/>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

@@ -91,7 +91,14 @@ export default function ReportIssue() {
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Report Submitted</h2>
           <p className="text-white/50 text-sm mb-8">The incident has been recorded at: {lat}, {lng}</p>
-          <button onClick={() => setSubmitState("idle")} className="px-6 py-2 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors">Report Another</button>
+           <button
+            onClick={() => {
+              window.location.href = "/"; // 🔥 or your home route
+            }}
+            className="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold transition"
+          >
+            Go back to home
+          </button>
         </div>
       </div>
     );
