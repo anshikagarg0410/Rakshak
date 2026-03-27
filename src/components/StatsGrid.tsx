@@ -67,37 +67,45 @@ export function StatsGrid() {
         const incidentData = await incidentRes.json();
         const cameraIncidentData = await cameraIncidentRes.json();
 
-        if (incidentData.success && cameraIncidentData.success) {
-          const allIncidents = incidentData.incidents || [];
-          const allCameraIncidents = cameraIncidentData.camera_incidents || [];
+        // Check if responses are successful (adjust based on your API structure)
+        const allIncidents = incidentData.incidents || [];
+        const allCameraIncidents = cameraIncidentData.camera_incidents || [];
 
-          // 1. Calculate Combined Total
-          const totalCount = allIncidents.length + allCameraIncidents.length;
+        // 1. Calculate Combined Total
+        const totalCount = allIncidents.length + allCameraIncidents.length;
 
-          // 2. Count Fire/Smoke from general Incidents (User Reports)
-          const fireCount = allIncidents.filter((i: any) =>
-            i.incident_type?.toLowerCase().includes("fire") ||
-            i.incident_type?.toLowerCase().includes("smoke")
-          ).length;
+        // 2. Count Fire/Smoke from BOTH sources
+        // From Citizen Reports
+        const reportedFire = allIncidents.filter((i: any) =>
+          i.incident_type?.toLowerCase().includes("fire") ||
+          i.incident_type?.toLowerCase().includes("smoke")
+        ).length;
 
-          // 3. Count Accidents from BOTH sources
-          const cameraAccidents = allCameraIncidents.filter((i: any) => {
-            const type = i.incident_type?.toLowerCase();
-            return type === 'c' || type === 'cf' || type === 'cs' || type === 'cfs';
-          }).length;
+        // From AI Cameras (using the code mapping from your AlertFeed logic)
+        const cameraFire = allCameraIncidents.filter((i: any) => {
+          const type = i.incident_type?.toLowerCase();
+          // codes: f=fire, s=smoke, cf=crash/fire, cs=crash/smoke, fs=fire/smoke, cfs=all
+          return ['f', 's', 'cf', 'cs', 'fs', 'cfs'].includes(type);
+        }).length;
 
-          const reportedAccidents = allIncidents.filter((i: any) =>
-            i.incident_type?.toLowerCase().includes("accident") ||
-            i.incident_type?.toLowerCase().includes("crash")
-          ).length;
+        // 3. Count Accidents from BOTH sources
+        const reportedAccidents = allIncidents.filter((i: any) =>
+          i.incident_type?.toLowerCase().includes("accident") ||
+          i.incident_type?.toLowerCase().includes("crash")
+        ).length;
 
-          setStats({
-            totalIncidents: totalCount, // Using the combined total
-            fireSmoke: fireCount,
-            accidents: cameraAccidents + reportedAccidents,
-            recentChange: `+${totalCount} detected`
-          });
-        }
+        const cameraAccidents = allCameraIncidents.filter((i: any) => {
+          const type = i.incident_type?.toLowerCase();
+          return ['c', 'cf', 'cs', 'cfs'].includes(type);
+        }).length;
+
+        setStats({
+          totalIncidents: totalCount,
+          fireSmoke: reportedFire + cameraFire, // Combined total
+          accidents: reportedAccidents + cameraAccidents, // Combined total
+          recentChange: `+${totalCount} detected`
+        });
+
       } catch (error) {
         console.error("Error aggregating frontend stats:", error);
       } finally {
