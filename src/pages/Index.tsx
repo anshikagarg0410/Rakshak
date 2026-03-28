@@ -123,7 +123,8 @@ import {
   Video,
   Plus,
   FilePlus,
-  Map as MapIcon
+  Map as MapIcon,
+  User
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { StatsGrid } from "@/components/StatsGrid";
@@ -168,6 +169,13 @@ const Index = () => {
             >
               <AlertTriangle className="w-3 h-3" />
               Alerts
+            </Link>
+
+            <Link
+              to="/user-report-map"
+              className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-secondary transition-colors text-xs text-muted-foreground hover:text-foreground font-medium"
+            >
+              User Reports
             </Link>
 
             
